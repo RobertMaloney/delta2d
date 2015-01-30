@@ -25,7 +25,9 @@ namespace delta2d
         private Vector2 m_gravity;
         private float m_rotation;
         private float m_scale;
+        private float m_mass;
         private AABB m_aabb;
+        private DeltaWorld m_deltaworld;
 
         public RigidBody(Texture2D tex)
         {
@@ -36,6 +38,7 @@ namespace delta2d
             m_gravity = new Vector2(0, 0);
             m_rotation = 0.0f;
             m_scale = 1.0f;
+            m_mass = 1.0f;
             m_aabb = new AABB(new Vector2(-1, -1), new Vector2(1, 1));
         }
 
@@ -64,15 +67,37 @@ namespace delta2d
             return m_scale;
         }
 
+        public void setMass(float mass)
+        {
+            m_mass = mass;
+        }
+
+        public float getMass()
+        {
+            return m_mass;
+        }
+
         public void stepTime(float elapsedTime)
         {
-            m_position += m_linearvel * elapsedTime + 0.5f * m_gravity * elapsedTime * elapsedTime;
-            m_linearvel += m_gravity * elapsedTime;
+            if (m_mass != 0.0f)
+            {
+                Vector2 newpos = m_position + m_linearvel * elapsedTime + 0.5f * m_gravity * elapsedTime * elapsedTime;
+                m_position = newpos;
+                m_linearvel += m_gravity * elapsedTime;
+            }
         }
 
         public void draw(ref SpriteBatch sb)
         {
             sb.Draw(m_texture, m_position - m_drawoffset*m_scale, null, Color.White, m_rotation, Vector2.Zero, m_scale, SpriteEffects.None, 0);
+
+            Texture2D pixel = new Texture2D(sb.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            pixel.SetData(new Color[] { Color.White });
+
+            sb.Draw(pixel, new Rectangle((int)(m_position.X - m_drawoffset.X * m_scale), (int)(m_position.Y - m_drawoffset.Y * m_scale), 1, (int)(m_drawoffset.Y * 2 * m_scale)), Color.Red);
+            sb.Draw(pixel, new Rectangle((int)(m_position.X - m_drawoffset.X * m_scale), (int)(m_position.Y - m_drawoffset.Y * m_scale), (int)(m_drawoffset.X * 2 * m_scale), 1), Color.Red);
+            sb.Draw(pixel, new Rectangle((int)(m_position.X + m_drawoffset.X * m_scale), (int)(m_position.Y - m_drawoffset.Y * m_scale), 1, (int)(m_drawoffset.Y * 2 * m_scale)), Color.Red);
+            sb.Draw(pixel, new Rectangle((int)(m_position.X - m_drawoffset.X * m_scale), (int)(m_position.Y + m_drawoffset.Y * m_scale), (int)(m_drawoffset.X * 2 * m_scale), 1), Color.Red);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace delta2d
 
         public DeltaWorld()
         {
-            m_gravity = new Vector2(0.0f, 9.81f);
+            m_gravity = new Vector2(0.0f, 98.1f);
             m_rigids = new List<RigidBody>();
         }
 
