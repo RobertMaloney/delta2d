@@ -19,11 +19,13 @@ namespace delta2d
     {
         private Vector2 m_gravity;
         private List<RigidBody> m_rigids;
+        private Broadphase m_broadphase;
 
         public DeltaWorld()
         {
             m_gravity = new Vector2(0.0f, 98.1f);
             m_rigids = new List<RigidBody>();
+            m_broadphase = new Broadphase();
         }
 
         public void setGravity(Vector2 grav)
