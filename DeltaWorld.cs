@@ -48,7 +48,7 @@ namespace delta2d
 
         public void addRigidBody(RigidBody rb)
         {
-            rb.setGravity(m_gravity);
+            rb.Gravity = m_gravity;
             m_rigids.Add(rb);
         }
 

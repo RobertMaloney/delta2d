@@ -26,8 +26,102 @@ namespace delta2d
         private float m_rotation;
         private float m_scale;
         private float m_mass;
+        private float m_restitution;
         private AABB m_aabb;
-        private DeltaWorld m_deltaworld;
+
+        public AABB AABB
+        {
+            get
+            {
+                // private AABB is [-1,1], so we must convert to world space
+                AABB ret = new AABB();
+                ret.Min = new Vector2(m_texture.Width * m_scale * m_aabb.Min.X + m_position.X, m_texture.Height * m_scale * m_aabb.Min.Y + m_position.Y);
+                ret.Max = new Vector2(m_texture.Width * m_scale * m_aabb.Max.X + m_position.X, m_texture.Height * m_scale * m_aabb.Max.Y + m_position.Y);
+                return ret;
+            }
+            set
+            {
+                m_aabb = value;
+            }
+        }
+        public Vector2 Position
+        {
+            get
+            {
+                return m_position;
+            }
+            set
+            {
+                m_position = value;
+            }
+        }
+        public Vector2 LinearVelocity
+        {
+            get
+            {
+                return m_linearvel;
+            }
+            set
+            {
+                m_linearvel = value;
+            }
+        }
+        public Vector2 Gravity
+        {
+            get
+            {
+                return m_gravity;
+            }
+            set
+            {
+                m_gravity = value;
+            }
+        }
+        public float Rotation
+        {
+            get
+            {
+                return m_rotation;
+            }
+            set
+            {
+                m_rotation = value;
+            }
+        }
+        public float Scale
+        {
+            get
+            {
+                return m_scale;
+            }
+            set
+            {
+                m_scale = value;
+            }
+        }
+        public float Mass
+        {
+            get
+            {
+                return m_mass;
+            }
+            set
+            {
+                m_mass = value;
+            }
+        }
+        public float Restitution
+        {
+            get
+            {
+                return m_restitution;
+            }
+            set
+            {
+                m_restitution = value;
+            }
+        }
+        
 
         public RigidBody(Texture2D tex)
         {
@@ -40,41 +134,6 @@ namespace delta2d
             m_scale = 1.0f;
             m_mass = 1.0f;
             m_aabb = new AABB(new Vector2(-1, -1), new Vector2(1, 1));
-        }
-
-        public void setGravity(Vector2 grav)
-        {
-            m_gravity = grav;
-        }
-
-        public void setPosition(Vector2 pos)
-        {
-            m_position = pos;
-        }
-
-        public Vector2 getPosition()
-        {
-            return m_position;
-        }
-
-        public void setScale(float scale)
-        {
-            m_scale = scale;
-        }
-
-        public float getScale()
-        {
-            return m_scale;
-        }
-
-        public void setMass(float mass)
-        {
-            m_mass = mass;
-        }
-
-        public float getMass()
-        {
-            return m_mass;
         }
 
         public void stepTime(float elapsedTime)

@@ -15,25 +15,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace delta2d
 {
-    struct AABBTreeNode
-    {
-        AABB bound;
-        AABBTreeNode left, right;
-        RigidBody leaf;
-
-        public void draw(ref SpriteBatch sb)
-        {
-            if (leaf != null) leaf.draw(ref sb);
-            else
-            {
-                if (!left.Equals(null)) left.draw(ref sb);
-                if (!right.Equals(null)) right.draw(ref sb);
-            }
-        }
-    }
     public class Broadphase
     {
         private AABBTreeNode root;
+        private List<RigidBody> m_rigids;
 
         public Broadphase()
         {
@@ -42,17 +27,41 @@ namespace delta2d
 
         public void addRigidBody(RigidBody rb)
         {
-
+            m_rigids.Add(rb);
         }
 
         public void draw(ref SpriteBatch sb)
         {
-            root.draw(ref sb);
+            //root.draw(ref sb);
+            foreach (RigidBody rb in m_rigids)
+            {
+                rb.draw(ref sb);
+            }
         }
 
         public void stepTime(float elapsedTime)
         {
+            // Collision Detection!
+            foreach (RigidBody rb in m_rigids) rb.stepTime(elapsedTime);
 
+            // Detect collision pairs
+            Dictionary<RigidBody,List<RigidBody>> collisions = new Dictionary<RigidBody,List<RigidBody>>();
+            for (int i = 0; i < m_rigids.Count - 1; ++i)
+            {
+                for (int j = i + 1; j < m_rigids.Count; ++j)
+                {
+                    RigidBody one = m_rigids.ElementAt(i);
+                    RigidBody two = m_rigids.ElementAt(j);
+                    if (one.AABB.intersects(two.AABB))
+                    {
+                        if (!collisions.ContainsKey(one)) collisions[one] = new List<RigidBody>();
+                        if (!collisions.ContainsKey(two)) collisions[two] = new List<RigidBody>();
+
+                        collisions[one].Add(two);
+                        collisions[two].Add(one);
+                    }
+                }
+            }
         }
     }
 }
