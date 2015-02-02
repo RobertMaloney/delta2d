@@ -67,7 +67,7 @@ namespace delta2d
         {
             Vector2 tl = other.Min, br = other.Max;
             if (tl.X > m_botright.X || br.X < m_topleft.X) return false;
-            if (tl.Y < m_botright.Y || br.Y > m_topleft.Y) return false;
+            if (tl.Y > m_botright.Y || br.Y < m_topleft.Y) return false;
 
             return true;
         }

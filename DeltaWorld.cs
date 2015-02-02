@@ -40,24 +40,18 @@ namespace delta2d
 
         public void stepTime(float timeElapsed)
         {
-            foreach (RigidBody rb in m_rigids)
-            {
-                rb.stepTime(timeElapsed);
-            }
+            m_broadphase.stepTime(timeElapsed);
         }
 
         public void addRigidBody(RigidBody rb)
         {
             rb.Gravity = m_gravity;
-            m_rigids.Add(rb);
+            m_broadphase.addRigidBody(rb);
         }
 
         public void draw(ref SpriteBatch sb)
         {
-            foreach (RigidBody rb in m_rigids)
-            {
-                rb.draw(ref sb);
-            }
+            m_broadphase.draw(ref sb);
         }
     }
 }

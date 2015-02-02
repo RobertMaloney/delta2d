@@ -18,11 +18,12 @@ namespace delta2d
 {
     public class RigidBody
     {
-        private Texture2D m_texture;
+        private DeltaShape m_shape;
         private Vector2 m_position;
         private Vector2 m_drawoffset;
         private Vector2 m_linearvel;
         private Vector2 m_gravity;
+        private float m_angularvel;
         private float m_rotation;
         private float m_scale;
         private float m_mass;
@@ -35,8 +36,8 @@ namespace delta2d
             {
                 // private AABB is [-1,1], so we must convert to world space
                 AABB ret = new AABB();
-                ret.Min = new Vector2(m_texture.Width * m_scale * m_aabb.Min.X + m_position.X, m_texture.Height * m_scale * m_aabb.Min.Y + m_position.Y);
-                ret.Max = new Vector2(m_texture.Width * m_scale * m_aabb.Max.X + m_position.X, m_texture.Height * m_scale * m_aabb.Max.Y + m_position.Y);
+                ret.Min = new Vector2(m_shape.Width * m_scale / 2 * m_aabb.Min.X + m_position.X, m_shape.Height * m_scale / 2 * m_aabb.Min.Y + m_position.Y);
+                ret.Max = new Vector2(m_shape.Width * m_scale / 2 * m_aabb.Max.X + m_position.X, m_shape.Height * m_scale / 2 * m_aabb.Max.Y + m_position.Y);
                 return ret;
             }
             set
@@ -75,6 +76,17 @@ namespace delta2d
             set
             {
                 m_gravity = value;
+            }
+        }
+        public float AngularVelocity
+        {
+            get
+            {
+                return m_angularvel;
+            }
+            set
+            {
+                m_angularvel = value;
             }
         }
         public float Rotation
@@ -125,11 +137,12 @@ namespace delta2d
 
         public RigidBody(Texture2D tex)
         {
-            m_texture = tex;
+            m_shape = new DeltaShape(tex);
             m_position = new Vector2(0, 0);
             m_drawoffset = new Vector2(tex.Width / 2, tex.Height / 2);
             m_linearvel = new Vector2(0, 0);
             m_gravity = new Vector2(0, 0);
+            m_angularvel = 0.0f;
             m_rotation = 0.0f;
             m_scale = 1.0f;
             m_mass = 1.0f;
@@ -144,11 +157,17 @@ namespace delta2d
                 m_position = newpos;
                 m_linearvel += m_gravity * elapsedTime;
             }
+            if (m_angularvel != 0.0f)
+            {
+                m_rotation += m_angularvel;
+                // Recalculate AABB
+
+            }
         }
 
         public void draw(ref SpriteBatch sb)
         {
-            sb.Draw(m_texture, m_position - m_drawoffset*m_scale, null, Color.White, m_rotation, Vector2.Zero, m_scale, SpriteEffects.None, 0);
+            sb.Draw(m_shape.Texture, m_position - m_drawoffset*m_scale, null, Color.White, m_rotation, Vector2.Zero, m_scale, SpriteEffects.None, 0);
 
             Texture2D pixel = new Texture2D(sb.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             pixel.SetData(new Color[] { Color.White });

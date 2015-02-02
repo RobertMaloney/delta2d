@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,13 @@ using Microsoft.Xna.Framework.Media;
 
 namespace delta2d
 {
+    struct Manifold
+    {
+        RigidBody A, B;
+        float penetrationDepth;
+        Vector2 normal;
+    }
+
     public class Broadphase
     {
         private AABBTreeNode root;
@@ -23,6 +31,7 @@ namespace delta2d
         public Broadphase()
         {
             root = new AABBTreeNode();
+            m_rigids = new List<RigidBody>();
         }
 
         public void addRigidBody(RigidBody rb)
@@ -61,6 +70,11 @@ namespace delta2d
                         collisions[two].Add(one);
                     }
                 }
+            }
+
+            foreach (KeyValuePair<RigidBody,List<RigidBody>> pair in collisions) {
+                if (pair.Key.Mass != 0.0f) pair.Key.LinearVelocity = new Vector2(0.0f, -100.0f);
+
             }
         }
     }
