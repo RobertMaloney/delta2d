@@ -4,69 +4,35 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace delta2d
 {
-    class DeltaShape
+    public abstract class DeltaShape
     {
-        private AABB m_aabb;
-        private List<Vector2> m_extents;
-        private Texture2D m_texture;
-
-        public int Width
+        public virtual string ShapeName
         {
             get
             {
-                return m_texture.Width;
+                return "DeltaShape";
             }
         }
-        public int Height
+        public virtual AABB AABB
         {
             get
             {
-                return m_texture.Height;
-            }
-        }
-        public Texture2D Texture
-        {
-            get
-            {
-                return m_texture;
+                return new AABB(Vector2.Zero, Vector2.Zero);
             }
         }
 
-        public DeltaShape(Texture2D tex)
+        public virtual BoxShape asBoxShape()
         {
-            m_texture = tex;
-            Color[] c = new Color[tex.Width * tex.Height];
-            tex.GetData<Color>(c);
-
-            for (int i = 0; i < tex.Width; i += 2)
-            {
-                for (int j = 0; j < tex.Height; ++j)
-                {
-                    if (c[i * tex.Width + j].A != 0)
-                    {
-                        // log extents
-                    }
-                }
-            }
-
-            m_texture.SetData<Color>(c);
-            m_aabb = new AABB(new Vector2(-1, -1), new Vector2(1, 1));
+            return null;
         }
 
-        public AABB getAABB(float rotation)
+        public virtual SphereShape asSphereShape()
         {
-            return m_aabb;
+            return null;
         }
     }
 }

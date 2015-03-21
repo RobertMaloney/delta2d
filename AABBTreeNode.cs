@@ -4,14 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace delta2d
 {
@@ -26,7 +19,7 @@ namespace delta2d
         protected AABB bounds;
         protected AABBTreeNode left;
         protected AABBTreeNode right;
-        private RigidBody leaf;
+        private Rigidbody leaf;
         private NodeType nodetype;
         private int children;
 
@@ -37,7 +30,7 @@ namespace delta2d
             children = 0;
         }
 
-        public AABBTreeNode(RigidBody rb)
+        public AABBTreeNode(Rigidbody rb)
         {
             leaf = rb;
             bounds = rb.AABB;
@@ -45,18 +38,18 @@ namespace delta2d
             children = 0;
         }
 
-        public void draw(ref SpriteBatch sb)
-        {
-            if (nodetype == NodeType.MID)
-            {
-                if (left != null) left.draw(ref sb);
-                if (right != null) right.draw(ref sb);
-            }
-            else
-            {
-                leaf.draw(ref sb);
-            }
-        }
+        //public void draw(ref SpriteBatch sb)
+        //{
+        //    if (nodetype == NodeType.MID)
+        //    {
+        //        if (left != null) left.draw(ref sb);
+        //        if (right != null) right.draw(ref sb);
+        //    }
+        //    else
+        //    {
+        //        leaf.draw(ref sb);
+        //    }
+        //}
     }
 }
 

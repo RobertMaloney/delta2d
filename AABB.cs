@@ -5,12 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace delta2d
 {
@@ -70,6 +64,10 @@ namespace delta2d
             if (tl.Y > m_botright.Y || br.Y < m_topleft.Y) return false;
 
             return true;
+        }
+
+        public static AABB operator *(AABB bounds, float scalar) {
+            return new AABB(bounds.Min*scalar, bounds.Max*scalar);
         }
     }
 };
